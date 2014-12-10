@@ -1,0 +1,1 @@
+This repository contains several `.bug` files that are used in Bayesian inference. They are required files in WinBUGS (or OpenBUGS, or RJAGS). We recommend calling WinBUGS or other Bayesian softwares from R, e.g. `R2WinBUGS`, or `R2OpenBUGS`.
