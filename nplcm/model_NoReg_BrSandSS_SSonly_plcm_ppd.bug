@@ -21,7 +21,7 @@ MODEL{#begin model
 		  mu_bs[k,j]<- psiBS[j]
 		  
 		  MBS.new[k,j]~dbern(mu_bs.new[k,j])
-		  mu_bs.new[k,j]<-psiBS[j]
+		  mu_bs.new[k,j] <- psiBS[j]
 	}
   }
   
