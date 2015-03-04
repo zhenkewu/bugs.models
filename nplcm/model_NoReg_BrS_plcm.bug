@@ -8,6 +8,8 @@ MODEL{#begin model
 		  ind[k,j] <- equals(1,template[Icat[k],j])
 		  MBS[k,j] ~ dbern(mu_bs[k,j])
 		  mu_bs[k,j]<-ind[k,j]*thetaBS[j]+(1-ind[k,j])*psiBS.cut[j]
+		  
+		
 	}
   }
   
@@ -15,6 +17,7 @@ MODEL{#begin model
     for (j in 1:JBrS){
 		  MBS[k,j] ~ dbern(mu_bs[k,j])
 		  mu_bs[k,j]<- psiBS[j]
+		  
 	}
   }
   
@@ -34,6 +37,7 @@ MODEL{#begin model
   # priors
   for (k in 1:Nd){
     Icat[k] ~ dcat(pEti[1:Jcause])
+
   }
   pEti[1:Jcause]~ddirch(alpha[])
   

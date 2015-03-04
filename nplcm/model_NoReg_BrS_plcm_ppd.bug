@@ -1,0 +1,72 @@
+MODEL{#begin model
+   ## 1) accommodates singletons, combos, and NoA;
+   ## 2) check-bit to prevent case data informing FPR;
+   
+  # BrS measurements:
+  for (k in 1:Nd){
+    for (j in 1:JBrS){
+		  ind[k,j] <- equals(1,template[Icat[k],j])
+		  MBS[k,j] ~ dbern(mu_bs[k,j])
+		  mu_bs[k,j]<-ind[k,j]*thetaBS[j]+(1-ind[k,j])*psiBS.cut[j]
+		  
+		  #predictive checking:
+		  ind.new[k,j] <- equals(1,template[Icat.new[k],j])
+		  MBS.new[k,j] ~ dbern(mu_bs.new[k,j])
+		  mu_bs.new[k,j]<-ind.new[k,j]*thetaBS[j]+(1-ind.new[k,j])*psiBS.cut[j]
+	}
+  }
+  
+   for (k in (Nd+1):(Nd+Nu)){
+    for (j in 1:JBrS){
+		  MBS[k,j] ~ dbern(mu_bs[k,j])
+		  mu_bs[k,j]<- psiBS[j]
+		  
+		  #predictive checking:
+		  MBS.new[k,j] ~ dbern(mu_bs[k,j])
+	}
+  }
+  
+  ## SS measurements on pathogens that also have BrS:
+  #for (k in 1:Nd){
+  #  for (j in 1:JSS){
+  #	  MSS[k,j]   ~ dbern(mu_ss[k,j])
+  #	  mu_ss[k,j] <- ind[k,j]*thetaSS[j]+(1-ind[k,j])*psiSS[j]
+  #	}
+	#for (j in 1:JSSonly){
+	#  ind[k,j+JBrS]<- equals(1,template[Icat[k],j+JBrS])
+	#  MSS.only[k,j] ~ dbern(mu_ss.only[k,j])
+	#  mu_ss.only[k,j]<-ind[k,j+JBrS]*thetaSS.only[j]
+	#}
+  #}
+ 
+  # priors
+  for (k in 1:Nd){
+    Icat[k] ~ dcat(pEti[1:Jcause])
+	
+	#predictive checking:
+	Icat.new[k]~dcat(pEti[1:Jcause])
+  }
+  pEti[1:Jcause]~ddirch(alpha[])
+  
+  #for (k in (Nd+1):(Nd+Nu)){
+  #  Icat[k] <- Jcause+1
+  #}
+  
+  # bronze-standard measurement characteristics:
+  for (j in 1:JBrS){
+    thetaBS[j]~dbeta(alphaB[j],betaB[j])
+    psiBS[j]~dbeta(1,1)
+	psiBS.cut[j]<-cut(psiBS[j])
+  }
+  
+  # silver-standard measurement characteristics:
+  #for (j in 1:JSS){
+  #	thetaSS[j]~dbeta(alphaS[j],betaS[j])
+  #	psiSS[j]<-0
+  #}
+  
+  #for (j in 1:JSSonly){
+  #	thetaSS.only[j]~dbeta(alphaS.only[j],betaS.only[j])
+  #}
+  
+}#end of model
