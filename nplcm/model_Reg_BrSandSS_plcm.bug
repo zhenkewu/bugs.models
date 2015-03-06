@@ -1,0 +1,54 @@
+MODEL{#begin model
+  for (k in 1:(Nd)){
+    for (j in 1:Jfull){
+		  ind[k,j]<-equals(1,template[Icat[k],j])
+		  MBS[k,j] ~ dbern(mu_bs[k,j])
+		  mu_bs[k,j]<-ind[k,j]*thetaBS[j]+(1-ind[k,j])*psiBS.cut[group[k],j]
+	 }
+  }
+  
+  for (k in (Nd+1):(Nd+Nu)){
+    for (j in 1:Jfull){
+		  #ind[k,j] <- equals(1,template[Icat[k],j])
+		  MBS[k,j] ~ dbern(mu_bs[k,j])
+		  mu_bs[k,j]<-psiBS[group[k],j]
+	 }
+  }
+  
+  
+  for (k in 1:Nd){
+    for (j in 1:JSS){
+	  MSS[k,j] ~ dbern(mu_ss[k,j])
+	  mu_ss[k,j]<-ind[k,j]*thetaSS[j]
+	  #+(1-ind[k,j])*psiSS[j]
+	}
+  }
+ 
+  # priors
+  for (k in 1:Nd){
+    Icat[k] ~ dcat(pEti[group[k],1:Jallowed])
+  }
+  for (grp in 1:N_grp){
+		pEti[grp,1:Jallowed]~ddirch(alpha[])
+  }
+  for (k in (Nd+1):(Nd+Nu)){
+    Icat[k]<-Jallowed+1
+  }
+  
+  # bronze-standard measurement characteristics:
+  for (j in 1:Jfull){
+    thetaBS[j]~dbeta(alphaB[j],betaB[j])
+	for (grp in 1:N_grp){
+	        psiBS.cut[grp,j]<-cut(psiBS[grp,j])
+			psiBS[grp,j]~dbeta(1,1)
+	}
+  }
+  
+
+  # silver-standard measurement characteristics:
+  for (j in 1:JSS){
+	thetaSS[j]~dbeta(alphaS[j],betaS[j])
+	#psiSS[j]<-0
+  }
+  
+}#end of model
