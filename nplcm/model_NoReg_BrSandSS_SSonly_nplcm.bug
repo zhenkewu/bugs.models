@@ -105,7 +105,7 @@ MODEL{#BEGIN MODEL
 		ThetaBS.marg[j]<-inprod2(ThetaBS[j,1:K],Eta[j,1:K])
 		PsiBS.marg[j]<-inprod2(PsiBS[j,1:K],Lambda[1:K])
 		
-		for (l in 1:JBrS){
+		for (l in 1:Jcause){
 				PsiBS.case[j,l]<-inprod2(PsiBS[j,1:K],Eta[l,1:K])
 	    }
 	}
